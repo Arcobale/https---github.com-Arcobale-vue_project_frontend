@@ -7,3 +7,6 @@ export const reqCategoryList = () => requests({url:'/product/getBaseCategoryList
 
 //获取banner
 export const reqBannerList = () => requestsMock({url:'/banner', method:'get'});
+
+//获取floor
+export const reqFLoorList = () => requestsMock({url:'/floor', method:'get'});

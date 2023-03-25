@@ -3,7 +3,7 @@
         <div class="sortList clearfix">
             <div class="center">
                 <!--banner轮播-->
-                <div class="swiper-container" id="mySwiper">
+                <div class="swiper-container" id="mySwiper" ref="cur">
                     <div class="swiper-wrapper">
                         <div class="swiper-slide" v-for="(carousel, index) in bannerList" :key="carousel.id">
                             <img :src="carousel.imgUrl" />
@@ -124,7 +124,7 @@ export default {
             handler(newValue, oldValue) {
                 //nextTick：在下次dom更新 循环结束之后 执行延迟回调。在 修改数据之后 立即使用这个方法，获取更新后的DOM
                 this.$nextTick(() => {
-                    var mySwiper = new Swiper(".swiper-container", {
+                    var mySwiper = new Swiper(this.$refs.cur, {
                         loop: true,
                         //如果需要分页器
                         pagination: {
