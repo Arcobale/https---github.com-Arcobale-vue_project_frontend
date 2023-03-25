@@ -3,19 +3,7 @@
         <div class="sortList clearfix">
             <div class="center">
                 <!--banner轮播-->
-                <div class="swiper-container" id="mySwiper" ref="cur">
-                    <div class="swiper-wrapper">
-                        <div class="swiper-slide" v-for="(carousel, index) in bannerList" :key="carousel.id">
-                            <img :src="carousel.imgUrl" />
-                        </div>
-                    </div>
-                    <!-- 如果需要分页器 -->
-                    <div class="swiper-pagination"></div>
-
-                    <!-- 如果需要导航按钮 -->
-                    <div class="swiper-button-prev"></div>
-                    <div class="swiper-button-next"></div>
-                </div>
+                <Carousel :list="bannerList"></Carousel>
             </div>
             <div class="right">
                 <div class="news">
@@ -102,7 +90,6 @@
 
 <script>
 import { mapState } from 'vuex';
-import Swiper from 'swiper';
 export default {
     name: "",
     mounted() {
@@ -115,32 +102,32 @@ export default {
             bannerList: state => state.home.bannerList
         })
     },
-    watch: {
-        //监听bannerList数据的变化：因为这条数据发生过变化---由空变为四个元素
-        bannerList: {
-            //如果执行handler方法，代表组件实例身上这个属性的属性值已经有了
-            //当前这个函数执行，只能保证数据已经有了，但是没法保证v-for已经遍历完
-            //v-for遍历完，才有完整的dom结构，不过这在watch中没办法保证
-            handler(newValue, oldValue) {
-                //nextTick：在下次dom更新 循环结束之后 执行延迟回调。在 修改数据之后 立即使用这个方法，获取更新后的DOM
-                this.$nextTick(() => {
-                    var mySwiper = new Swiper(this.$refs.cur, {
-                        loop: true,
-                        //如果需要分页器
-                        pagination: {
-                            el: ".swiper-pagination",
-                            clickable: true,
-                        },
-                        //如果需要前进后退按钮
-                        navigation: {
-                            nextEl: ".swiper-button-next",
-                            prevEl: ".swiper-button-prev",
-                        },
-                    });
-                })
-            }
-        }
-    }
+    // watch: {
+    //     //监听bannerList数据的变化：因为这条数据发生过变化---由空变为四个元素
+    //     bannerList: {
+    //         //如果执行handler方法，代表组件实例身上这个属性的属性值已经有了
+    //         //当前这个函数执行，只能保证数据已经有了，但是没法保证v-for已经遍历完
+    //         //v-for遍历完，才有完整的dom结构，不过这在watch中没办法保证
+    //         handler(newValue, oldValue) {
+    //             //nextTick：在下次dom更新 循环结束之后 执行延迟回调。在 修改数据之后 立即使用这个方法，获取更新后的DOM
+    //             this.$nextTick(() => {
+    //                 var mySwiper = new Swiper(this.$refs.cur, {
+    //                     loop: true,
+    //                     //如果需要分页器
+    //                     pagination: {
+    //                         el: ".swiper-pagination",
+    //                         clickable: true,
+    //                     },
+    //                     //如果需要前进后退按钮
+    //                     navigation: {
+    //                         nextEl: ".swiper-button-next",
+    //                         prevEl: ".swiper-button-prev",
+    //                     },
+    //                 });
+    //             })
+    //         }
+    //     }
+    // }
 }
 </script>
 
