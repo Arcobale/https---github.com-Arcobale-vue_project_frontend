@@ -11,10 +11,7 @@
             </li>
           </ul>
           <ul class="fl sui-tag">
-            <li class="with-x">手机</li>
-            <li class="with-x">iphone<i>×</i></li>
-            <li class="with-x">华为<i>×</i></li>
-            <li class="with-x">OPPO<i>×</i></li>
+            <li class="with-x" v-if="searchParams.categoryName">{{ searchParams.categoryName }}<i @click="removeCategoryName">×</i></li>
           </ul>
         </div>
 
@@ -149,15 +146,25 @@ export default {
   methods: {
     getData() {
       this.$store.dispatch("getSearchList", this.searchParams);
+    },
+    removeCategoryName() {
+      //发送给服务器的参数是非必选的，如果属性值为空，还是会把相应的字段带给服务器
+      //但是把相应的字段设为undefined，这个字段就不会带给服务器，优化请求性能
+      this.searchParams.categoryName = undefined;
+      this.searchParams.category1Id = undefined;
+      this.searchParams.category2Id = undefined;
+      this.searchParams.category3Id = undefined;
+      this.getData();
+      this.$router.push({name: "search", params:this.$route.params});
     }
   },
   watch: {
     $route() {
       Object.assign(this.searchParams, this.$route.query, this.$route.params);
       this.getData();
-      this.searchParams.category1Id = "";
-      this.searchParams.category2Id = "";
-      this.searchParams.category3Id = "";
+      this.searchParams.category1Id = undefined;
+      this.searchParams.category2Id = undefined;
+      this.searchParams.category3Id = undefined;
     }
   }
 }
