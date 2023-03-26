@@ -15,11 +15,13 @@
             <li class="with-x" v-if="searchParams.categoryName">{{ searchParams.categoryName }}<i @click="removeCategoryName">×</i></li>
             <!-- 面包屑-关键字 -->
             <li class="with-x" v-if="searchParams.keyword">{{ searchParams.keyword }}<i @click="removeKeywordName">×</i></li>
+            <!-- 面包屑-品牌信息 -->
+            <li class="with-x" v-if="searchParams.trademark">{{ searchParams.trademark.split(":")[1] }}<i @click="removeTrademarkName">×</i></li>
           </ul>
         </div>
 
         <!--selector-->
-        <SearchSelector />
+        <SearchSelector @trademarkInfo="trademarkInfo"/>
 
         <!--details-->
         <div class="details clearfix">
@@ -165,6 +167,15 @@ export default {
       this.getData();
       this.$router.push({name: "search", query: this.$route.query});
       this.$bus.$emit("clear");
+    },
+    trademarkInfo(trademark) {
+      console.log("erew")
+      this.searchParams.trademark = `${trademark.tmId}:${trademark.tmName}`;
+      this.getData();
+    },
+    removeTrademarkName() {
+      this.searchParams.trademark = undefined;
+      this.getData();
     }
   },
   watch: {
