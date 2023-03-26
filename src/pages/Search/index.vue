@@ -31,11 +31,11 @@
             <div class="navbar-inner filter">
               <!-- 排序条件 -->
               <ul class="sui-nav">
-                <li :class="{active:isOne}">
-                  <a href="#">综合<span v-show="isOne" class="iconfont" :class="{'icon-arrow_up_fat':isAsc, 'icon-arrow_down_fat':isDesc}"></span></a>
+                <li :class="{active:isOne}" @click="changeOrder('1')">
+                  <a>综合<span v-show="isOne" class="iconfont" :class="{'icon-arrow_up_fat':isAsc, 'icon-arrow_down_fat':isDesc}"></span></a>
                 </li>
-                <li :class="{active:isTwo}">
-                  <a href="#">价格<span v-show="isTwo" class="iconfont" :class="{'iicon-arrow_up_fat':isAsc, 'icon-arrow_down_fat':isDesc}"></span></a>
+                <li :class="{active:isTwo}" @click="changeOrder('2')">
+                  <a>价格<span v-show="isTwo" class="iconfont" :class="{'icon-arrow_up_fat':isAsc, 'icon-arrow_down_fat':isDesc}"></span></a>
                 </li>
               </ul>
             </div>
@@ -115,7 +115,7 @@ export default {
         "category3Id": "",
         "categoryName": "",
         "keyword": "",
-        "order": "1:asc",
+        "order": "1:desc",
         "pageNo": 1,
         "pageSize": 10,
         "props": [],
@@ -188,7 +188,17 @@ export default {
     removePropName(index) {
       this.searchParams.props.splice(index, 1);
       this.getData();
-    }
+    },
+    changeOrder(flag) {
+      let [preFlag, preOrder] = this.searchParams.order.split(":");
+      if (flag == preFlag) {
+        let order = preOrder == "desc" ? "asc" : "desc";
+        this.searchParams.order = `${flag}:${order}`;
+      } else {
+        this.searchParams.order = `${flag}:desc`;
+      }
+      this.getData();
+    },
   },
   watch: {
     $route() {
