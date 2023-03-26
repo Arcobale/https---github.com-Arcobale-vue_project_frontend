@@ -18,6 +18,10 @@ import 'swiper/css/swiper.css';
 Vue.config.productionTip = false
 new Vue({
   render: h => h(App),
+  //全局事件总线配置
+  beforeCreate() {
+    Vue.prototype.$bus = this;
+  },
   //注册路由：组件实例的身上会拥有$route,$router属性
   router,
   //注册仓库：组件实例的身上会多一个属性$store

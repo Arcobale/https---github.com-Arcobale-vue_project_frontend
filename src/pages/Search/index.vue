@@ -11,7 +11,10 @@
             </li>
           </ul>
           <ul class="fl sui-tag">
+            <!-- 面包屑-分类 -->
             <li class="with-x" v-if="searchParams.categoryName">{{ searchParams.categoryName }}<i @click="removeCategoryName">×</i></li>
+            <!-- 面包屑-关键字 -->
+            <li class="with-x" v-if="searchParams.keyword">{{ searchParams.keyword }}<i @click="removeKeywordName">×</i></li>
           </ul>
         </div>
 
@@ -156,6 +159,12 @@ export default {
       this.searchParams.category3Id = undefined;
       this.getData();
       this.$router.push({name: "search", params:this.$route.params});
+    },
+    removeKeywordName() {
+      this.searchParams.keyword = undefined;
+      this.getData();
+      this.$router.push({name: "search", query: this.$route.query});
+      this.$bus.$emit("clear");
     }
   },
   watch: {
