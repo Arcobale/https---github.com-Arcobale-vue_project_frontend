@@ -17,11 +17,13 @@
             <li class="with-x" v-if="searchParams.keyword">{{ searchParams.keyword }}<i @click="removeKeywordName">×</i></li>
             <!-- 面包屑-品牌信息 -->
             <li class="with-x" v-if="searchParams.trademark">{{ searchParams.trademark.split(":")[1] }}<i @click="removeTrademarkName">×</i></li>
+            <!-- 面包屑-售卖信息 -->
+            <li class="with-x" v-for="(prop, index) in searchParams.props" :key="index">{{ prop.split(":")[1] }}<i @click="removePropName(index)">×</i></li>
           </ul>
         </div>
 
         <!--selector-->
-        <SearchSelector @trademarkInfo="trademarkInfo"/>
+        <SearchSelector @trademarkInfo="trademarkInfo" @attrInfo="attrInfo"/>
 
         <!--details-->
         <div class="details clearfix">
@@ -169,12 +171,23 @@ export default {
       this.$bus.$emit("clear");
     },
     trademarkInfo(trademark) {
-      console.log("erew")
       this.searchParams.trademark = `${trademark.tmId}:${trademark.tmName}`;
       this.getData();
     },
     removeTrademarkName() {
       this.searchParams.trademark = undefined;
+      this.getData();
+    },
+    attrInfo(attr, attrValue) {
+      let props = `${attr.attrId}:${attrValue}:${attr.attrName}`;
+      //数组去重
+      if (this.searchParams.props.indexOf(props) == -1) {
+        this.searchParams.props.push(props);
+        this.getData();
+      }
+    },
+    removePropName(index) {
+      this.searchParams.props.splice(index, 1);
       this.getData();
     }
   },
