@@ -31,23 +31,11 @@
             <div class="navbar-inner filter">
               <!-- 排序条件 -->
               <ul class="sui-nav">
-                <li class="active">
-                  <a href="#">综合</a>
+                <li :class="{active:isOne}">
+                  <a href="#">综合<span v-show="isOne" class="iconfont" :class="{'icon-arrow_up_fat':isAsc, 'icon-arrow_down_fat':isDesc}"></span></a>
                 </li>
-                <li>
-                  <a href="#">销量</a>
-                </li>
-                <li>
-                  <a href="#">新品</a>
-                </li>
-                <li>
-                  <a href="#">评价</a>
-                </li>
-                <li>
-                  <a href="#">价格⬆</a>
-                </li>
-                <li>
-                  <a href="#">价格⬇</a>
+                <li :class="{active:isTwo}">
+                  <a href="#">价格<span v-show="isTwo" class="iconfont" :class="{'iicon-arrow_up_fat':isAsc, 'icon-arrow_down_fat':isDesc}"></span></a>
                 </li>
               </ul>
             </div>
@@ -67,8 +55,7 @@
                     </strong>
                   </div>
                   <div class="attr">
-                    <a target="_blank" href="item.html" title="促销信息，下单即赠送三个月CIBN视频会员卡！【小米电视新品4A 58 火爆预约中】">{{ good.title
-                    }}</a>
+                    <a target="_blank" href="item.html" title="good.title">{{ good.title}}</a>
                   </div>
                   <div class="commit">
                     <i class="command">已有<span>2000</span>人评价</i>
@@ -128,7 +115,7 @@ export default {
         "category3Id": "",
         "categoryName": "",
         "keyword": "",
-        "order": "",
+        "order": "1:asc",
         "pageNo": 1,
         "pageSize": 10,
         "props": [],
@@ -148,7 +135,19 @@ export default {
   },
   computed: {
     //mapGetters写法：传递数组，因为getters计算没有划分模块
-    ...mapGetters(['goodsList'])
+    ...mapGetters(['goodsList']),
+    isOne() {
+      return this.searchParams.order.indexOf("1") != -1;
+    },
+    isTwo() {
+      return this.searchParams.order.indexOf("2") != -1;
+    },
+    isAsc() {
+      return this.searchParams.order.indexOf("asc") != -1;
+    },
+    isDesc() {
+      return this.searchParams.order.indexOf("desc") != -1;
+    },
   },
   methods: {
     getData() {
