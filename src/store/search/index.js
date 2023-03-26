@@ -16,7 +16,19 @@ const actions = {
         }
     }
 };
-const getters = {};
+//getters主要作用：简化数据
+const getters = {
+    //假如网络加载速度慢或者没网，应该返回undefined
+    attrsList() {
+        return state.searchList.attrsList || [];
+    },
+    goodsList() {
+        return state.searchList.goodsList;
+    },
+    trademarkList() {
+        return state.searchList.trademarkList;
+    }
+};
 export default {
     state,
     mutations,
