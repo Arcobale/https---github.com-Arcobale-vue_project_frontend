@@ -69,7 +69,7 @@
             </ul>
           </div>
           <!-- 分页器 -->
-          <Pagination :pageNo="1" :pageSize="10" :total="101" :continues="5"></Pagination>
+          <Pagination :pageNo="searchParams.pageNo" :pageSize="searchParams.pageSize" :total="total" :continues="5" @pageInfo="pageInfo"></Pagination>
         </div>
       </div>
     </div>
@@ -78,7 +78,7 @@
 
 <script>
 import SearchSelector from './SearchSelector/SearchSelector'
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 export default {
   name: 'Search',
   data() {
@@ -89,7 +89,7 @@ export default {
         "keyword": "",
         "order": "1:desc",
         "pageNo": 1,
-        "pageSize": 10,
+        "pageSize": 3,
         "props": [],
         "trademark": ""
       },
@@ -120,6 +120,9 @@ export default {
     isDesc() {
       return this.searchParams.order.indexOf("desc") != -1;
     },
+    ...mapState({
+      total: state => state.search.searchList.total
+    })
   },
   methods: {
     getData() {
@@ -171,6 +174,10 @@ export default {
       }
       this.getData();
     },
+    pageInfo(pageNew) {
+      this.searchParams.pageNo = pageNew;
+      this.getData();
+    }
   },
   watch: {
     $route() {

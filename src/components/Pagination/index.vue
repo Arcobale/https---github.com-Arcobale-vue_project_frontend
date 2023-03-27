@@ -1,13 +1,16 @@
 <template>
     <div class="pagination">
-        <button :disabled="pageNo == 1">上一页</button>
-        <button v-show="startNumAndEndNum.start > 1">1</button>
+        <button :disabled="pageNo == 1" @click="pageHandler(pageNo - 1)">上一页</button>
+        <button v-show="startNumAndEndNum.start > 1" @click="pageHandler(1)" :class="{ active: pageNo == 1 }">1</button>
         <button v-show="startNumAndEndNum.start > 2">···</button>
 
-        <button v-for="page in continues" :key="page">{{ startNumAndEndNum.start + page - 1 }}</button>
+        <button v-for="page in continues" :key="page" @click="pageHandler(startNumAndEndNum.start + page - 1)"
+            :class="{ active: pageNo == startNumAndEndNum.start + page - 1 }">{{ startNumAndEndNum.start + page - 1
+            }}</button>
         <button v-show="startNumAndEndNum.end < totalPage - 1">···</button>
-        <button v-show="startNumAndEndNum.end < totalPage">{{ totalPage }}</button>
-        <button :disabled="pageNo == totalPage">下一页</button>
+        <button v-show="startNumAndEndNum.end < totalPage" @click="pageHandler(totalPage)"
+            :class="{ active: pageNo == totalPage }">{{ totalPage }}</button>
+        <button :disabled="pageNo == totalPage" @click="pageHandler(pageNo + 1)">下一页</button>
 
         <button style="margin-left: 30px">共 {{ total }} 条</button>
     </div>
@@ -16,7 +19,7 @@
 <script>
 export default {
     name: "Pagination",
-    props:['pageNo', 'pageSize', 'total', 'continues'],
+    props: ['pageNo', 'pageSize', 'total', 'continues'],
     computed: {
         totalPage() {
             return Math.ceil(this.total / this.pageSize);
@@ -38,7 +41,12 @@ export default {
                     end = this.totalPage
                 }
             }
-            return {start, end};
+            return { start, end };
+        }
+    },
+    methods: {
+        pageHandler(pageNew) {
+            this.$emit("pageInfo", pageNew);
         }
     }
 }
@@ -47,6 +55,7 @@ export default {
 <style lang="less" scoped>
 .pagination {
     text-align: center;
+
     button {
         margin: 0 5px;
         background-color: #f4f4f5;
@@ -76,5 +85,4 @@ export default {
             color: #fff;
         }
     }
-}
-</style>
+}</style>
