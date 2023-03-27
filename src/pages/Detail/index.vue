@@ -78,7 +78,7 @@
                 <a href="javascript:" class="mins" @click="skuNum > 1 ? skuNum-- : skuNum">-</a>
               </div>
               <div class="add">
-                <a href="javascript:">加入购物车</a>
+                <a href="javascript:" @click="addShopCart">加入购物车</a>
               </div>
             </div>
           </div>
@@ -368,6 +368,14 @@ export default {
         this.skuNum = parseInt(value);
       }
 
+    },
+    addShopCart() {
+      //1.发请求：将产品加到购物车，通知服务器
+      this.$store.dispatch("addOrUpdateShopCart", {skuId: this.$route.params.skuid, skuNum: this.skuNum});
+      //2.服务器存储成功，路由跳转
+
+      //存储失败，给用户进行提示
+      
     }
   }
 }

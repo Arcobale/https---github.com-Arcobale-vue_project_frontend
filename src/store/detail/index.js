@@ -1,4 +1,4 @@
-import { reqGoodList } from "@/api";
+import { reqGoodList, reqAddOrUpdateShopCart } from "@/api";
 
 const state = {
     goodList: {},
@@ -16,6 +16,10 @@ const actions = {
         if (result.code == 200) {
             commit("GOODLIST", result.data);
         }
+    },
+    async addOrUpdateShopCart({commit}, {skuId, skuNum}) {
+        //无返回值
+        await reqAddOrUpdateShopCart(skuId, skuNum);
     }
 };
 
