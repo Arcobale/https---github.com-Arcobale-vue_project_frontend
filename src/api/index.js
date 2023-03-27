@@ -12,3 +12,5 @@ export const reqBannerList = () => requestsMock({ url: '/banner', method: 'get' 
 export const reqFLoorList = () => requestsMock({ url: '/floor', method: 'get' });
 
 export const reqSearchList = (params) => requests({ url: '/list', method: 'post', data: params });
+
+export const reqGoodList = (skuId) => requests({url: `/item/${skuId}`, method: 'get'});

@@ -356,6 +356,9 @@
     components: {
       ImageList,
       Zoom
+    },
+    mounted() {
+      this.$store.dispatch("getGoodList", this.$route.params.skuid);
     }
   }
 </script>
