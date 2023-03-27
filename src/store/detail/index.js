@@ -19,7 +19,12 @@ const actions = {
     },
     async addOrUpdateShopCart({commit}, {skuId, skuNum}) {
         //无返回值
-        await reqAddOrUpdateShopCart(skuId, skuNum);
+        let result = await reqAddOrUpdateShopCart(skuId, skuNum);
+        if (result.code == 200) {
+            return "ok";
+        } else {
+            return Promise.reject(new Error("Failed"));
+        }
     }
 };
 

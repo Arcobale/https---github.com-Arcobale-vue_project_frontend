@@ -369,13 +369,19 @@ export default {
       }
 
     },
-    addShopCart() {
+    async addShopCart() {
       //1.发请求：将产品加到购物车，通知服务器
-      this.$store.dispatch("addOrUpdateShopCart", {skuId: this.$route.params.skuid, skuNum: this.skuNum});
       //2.服务器存储成功，路由跳转
+      //          失败，给用户进行提示
+      //由于async标识，返回的是Promise对象
+      try {
+        let result = await this.$store.dispatch("addOrUpdateShopCart", { skuId: this.$route.params.skuid, skuNum: this.skuNum });
+        //路由跳转
+        console.log(result);
+      } catch (error) {
+        console.log(error.message);
+      }
 
-      //存储失败，给用户进行提示
-      
     }
   }
 }
