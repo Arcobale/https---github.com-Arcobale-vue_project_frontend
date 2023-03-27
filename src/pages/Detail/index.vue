@@ -376,8 +376,10 @@ export default {
       //由于async标识，返回的是Promise对象
       try {
         let result = await this.$store.dispatch("addOrUpdateShopCart", { skuId: this.$route.params.skuid, skuNum: this.skuNum });
+        //本地存储｜会话存储：一般存储的是字符串，需要将对象转换为JSON格式字符串
+        sessionStorage.setItem("SKUINFO", JSON.stringify(this.skuInfo));
         //路由跳转
-        this.$router.push({name: "addcartsuccess"})
+        this.$router.push({name: "addcartsuccess", query: {skuNum: this.skuNum}});
       } catch (error) {
         console.log(error.message);
       }
