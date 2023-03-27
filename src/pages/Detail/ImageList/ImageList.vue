@@ -2,7 +2,7 @@
   <div class="swiper-container" ref="cur">
     <div class="swiper-wrapper">
       <div class="swiper-slide" v-for="(image, index) in skuImageList" :key="image.id">
-        <img :src="image.imgUrl">
+        <img :src="image.imgUrl" :class="{active: currentIndex == index}" @click="changeIndex(index)">
       </div>
     </div>
     <div class="swiper-button-next"></div>
@@ -15,6 +15,11 @@ import Swiper from 'swiper'
 export default {
   name: "ImageList",
   props: ['skuImageList'],
+  data() {
+    return {
+      currentIndex: 0
+    }
+  },
   watch: {
     skuImageList(newValue, oldValue) {
       this.$nextTick(() => {
@@ -31,6 +36,12 @@ export default {
         });
       });
     },
+  },
+  methods: {
+    changeIndex(index) {
+      this.currentIndex = index;
+      this.$bus.$emit("changeBigImage", this.currentIndex);
+    }
   }
 }
 </script>
@@ -56,11 +67,6 @@ export default {
       display: block;
 
       &.active {
-        border: 2px solid #f60;
-        padding: 1px;
-      }
-
-      &:hover {
         border: 2px solid #f60;
         padding: 1px;
       }
