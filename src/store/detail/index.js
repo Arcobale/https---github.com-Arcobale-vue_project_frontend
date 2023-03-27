@@ -19,7 +19,15 @@ const actions = {
     }
 };
 
-const getters = {};
+const getters = {
+    categoryView() {
+        //至少返回一个空对象，防止undefine警告
+        return state.goodList.categoryView || {};
+    },
+    skuInfo() {
+        return state.goodList.skuInfo || {};
+    },
+};
 
 export default {
     state,
