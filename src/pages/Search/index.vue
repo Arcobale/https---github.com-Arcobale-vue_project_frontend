@@ -12,18 +12,22 @@
           </ul>
           <ul class="fl sui-tag">
             <!-- 面包屑-分类 -->
-            <li class="with-x" v-if="searchParams.categoryName">{{ searchParams.categoryName }}<i @click="removeCategoryName">×</i></li>
+            <li class="with-x" v-if="searchParams.categoryName">{{ searchParams.categoryName }}<i
+                @click="removeCategoryName">×</i></li>
             <!-- 面包屑-关键字 -->
-            <li class="with-x" v-if="searchParams.keyword">{{ searchParams.keyword }}<i @click="removeKeywordName">×</i></li>
+            <li class="with-x" v-if="searchParams.keyword">{{ searchParams.keyword }}<i @click="removeKeywordName">×</i>
+            </li>
             <!-- 面包屑-品牌信息 -->
-            <li class="with-x" v-if="searchParams.trademark">{{ searchParams.trademark.split(":")[1] }}<i @click="removeTrademarkName">×</i></li>
+            <li class="with-x" v-if="searchParams.trademark">{{ searchParams.trademark.split(":")[1] }}<i
+                @click="removeTrademarkName">×</i></li>
             <!-- 面包屑-售卖信息 -->
-            <li class="with-x" v-for="(prop, index) in searchParams.props" :key="index">{{ prop.split(":")[1] }}<i @click="removePropName(index)">×</i></li>
+            <li class="with-x" v-for="(prop, index) in searchParams.props" :key="index">{{ prop.split(":")[1] }}<i
+                @click="removePropName(index)">×</i></li>
           </ul>
         </div>
 
         <!--selector-->
-        <SearchSelector @trademarkInfo="trademarkInfo" @attrInfo="attrInfo"/>
+        <SearchSelector @trademarkInfo="trademarkInfo" @attrInfo="attrInfo" />
 
         <!--details-->
         <div class="details clearfix">
@@ -31,11 +35,13 @@
             <div class="navbar-inner filter">
               <!-- 排序条件 -->
               <ul class="sui-nav">
-                <li :class="{active:isOne}" @click="changeOrder('1')">
-                  <a>综合<span v-show="isOne" class="iconfont" :class="{'icon-arrow_up_fat':isAsc, 'icon-arrow_down_fat':isDesc}"></span></a>
+                <li :class="{ active: isOne }" @click="changeOrder('1')">
+                  <a>综合<span v-show="isOne" class="iconfont"
+                      :class="{ 'icon-arrow_up_fat': isAsc, 'icon-arrow_down_fat': isDesc }"></span></a>
                 </li>
-                <li :class="{active:isTwo}" @click="changeOrder('2')">
-                  <a>价格<span v-show="isTwo" class="iconfont" :class="{'icon-arrow_up_fat':isAsc, 'icon-arrow_down_fat':isDesc}"></span></a>
+                <li :class="{ active: isTwo }" @click="changeOrder('2')">
+                  <a>价格<span v-show="isTwo" class="iconfont"
+                      :class="{ 'icon-arrow_up_fat': isAsc, 'icon-arrow_down_fat': isDesc }"></span></a>
                 </li>
               </ul>
             </div>
@@ -46,7 +52,9 @@
               <li class="yui3-u-1-5" v-for="good in goodsList" :key="good.id">
                 <div class="list-wrap">
                   <div class="p-img">
-                    <a href="item.html" target="_blank"><img :src="good.defaultImg" /></a>
+                    <router-link :to="`/detail/${good.id}`">
+                      <img :src="good.defaultImg" />
+                    </router-link>
                   </div>
                   <div class="price">
                     <strong>
@@ -55,7 +63,7 @@
                     </strong>
                   </div>
                   <div class="attr">
-                    <a target="_blank" href="item.html" title="good.title">{{ good.title}}</a>
+                    <a target="_blank" href="item.html" title="good.title">{{ good.title }}</a>
                   </div>
                   <div class="commit">
                     <i class="command">已有<span>2000</span>人评价</i>
@@ -69,7 +77,8 @@
             </ul>
           </div>
           <!-- 分页器 -->
-          <Pagination :pageNo="searchParams.pageNo" :pageSize="searchParams.pageSize" :total="total" :continues="5" @pageInfo="pageInfo"></Pagination>
+          <Pagination :pageNo="searchParams.pageNo" :pageSize="searchParams.pageSize" :total="total" :continues="5"
+            @pageInfo="pageInfo"></Pagination>
         </div>
       </div>
     </div>
@@ -136,12 +145,12 @@ export default {
       this.searchParams.category2Id = undefined;
       this.searchParams.category3Id = undefined;
       this.getData();
-      this.$router.push({name: "search", params:this.$route.params});
+      this.$router.push({ name: "search", params: this.$route.params });
     },
     removeKeywordName() {
       this.searchParams.keyword = undefined;
       this.getData();
-      this.$router.push({name: "search", query: this.$route.query});
+      this.$router.push({ name: "search", query: this.$route.query });
       this.$bus.$emit("clear");
     },
     trademarkInfo(trademark) {
