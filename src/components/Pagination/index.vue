@@ -1,26 +1,46 @@
 <template>
     <div class="pagination">
-        <button>上一页</button>
-        <button>1</button>
-        <button>···</button>
+        <button :disabled="pageNo == 1">上一页</button>
+        <button v-show="startNumAndEndNum.start > 1">1</button>
+        <button v-show="startNumAndEndNum.start > 2">···</button>
 
-        <button>3</button>
-        <button>4</button>
-        <button>5</button>
-        <button>6</button>
-        <button>7</button>
+        <button v-for="page in continues" :key="page">{{ startNumAndEndNum.start + page - 1 }}</button>
+        <button v-show="startNumAndEndNum.end < totalPage - 1">···</button>
+        <button v-show="startNumAndEndNum.end < totalPage">{{ totalPage }}</button>
+        <button :disabled="pageNo == totalPage">下一页</button>
 
-        <button>···</button>
-        <button>9</button>
-        <button>下一页</button>
-
-        <button style="margin-left: 30px">共 60 条</button>
+        <button style="margin-left: 30px">共 {{ total }} 条</button>
     </div>
 </template>
   
 <script>
 export default {
     name: "Pagination",
+    props:['pageNo', 'pageSize', 'total', 'continues'],
+    computed: {
+        totalPage() {
+            return Math.ceil(this.total / this.pageSize);
+        },
+        startNumAndEndNum() {
+            let start = 0, end = 0;
+            //考虑总页数比连续页数少的情况
+            if (this.totalPage < this.continues) {
+                start = 1;
+                end = this.totalPage;
+            } else {
+                start = this.pageNo - parseInt(this.continues / 2);
+                end = this.pageNo + parseInt(this.continues / 2);
+                if (start < 1) {
+                    start = 1;
+                    end = this.continues;
+                } else if (end > this.totalPage) {
+                    start = this.totalPage - this.continues + 1;
+                    end = this.totalPage
+                }
+            }
+            return {start, end};
+        }
+    }
 }
 </script>
   
