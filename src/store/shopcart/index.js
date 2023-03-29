@@ -1,10 +1,10 @@
 import {reqCartList} from '@/api';
 const state = {
-    carList: [],
+    cartList: [],
 };
 const mutations = {
-    CARTLIST(state, carList) {
-        state.carList = carList;
+    CARTLIST(state, cartList) {
+        state.cartList = cartList;
     }
 };
 const actions = {
@@ -15,7 +15,11 @@ const actions = {
         }
     }
 };
-const getters = {};
+const getters = {
+    cartList() {
+        return state.cartList[0] || {};
+    }
+};
 export default {
     state,
     mutations,
