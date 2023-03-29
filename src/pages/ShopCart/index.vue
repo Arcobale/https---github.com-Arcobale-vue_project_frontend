@@ -23,9 +23,10 @@
             <span class="price">{{ cart.skuPrice }}.00</span>
           </li>
           <li class="cart-list-con5">
-            <a href="javascript:void(0)" class="mins">-</a>
-            <input autocomplete="off" type="text" :value="cart.skuNum" minnum="1" class="itxt">
-            <a href="javascript:void(0)" class="plus">+</a>
+            <a href="javascript:void(0)" class="mins" @click="updateSkuNum('minus', -1, cart)">-</a>
+            <input autocomplete="off" type="text" :value="cart.skuNum" minnum="1" class="itxt"
+              @change="updateSkuNum('input', $event.target.value * 1, cart)">
+            <a href="javascript:void(0)" class="plus" @click="updateSkuNum('plus', 1, cart)">+</a>
           </li>
           <li class="cart-list-con6">
             <span class="sum">{{ cart.skuNum * cart.skuPrice }}</span>
@@ -75,6 +76,33 @@ export default {
     getData() {
       this.$store.dispatch("getCartList");
     },
+    async updateSkuNum(type, newSkuNum, cart) {
+      let disSkuNum = 0;
+      switch (type) {
+        case 'minus':
+          disSkuNum = cart.skuNum > 1 ? -1 : 0;
+          break;
+        case 'plus':
+          disSkuNum = 1;
+          break;
+        case 'input':
+          if (isNaN(newSkuNum) || newSkuNum < 1) {
+            disSkuNum = 0;
+          } else {
+            disSkuNum = parseInt(newSkuNum) - cart.skuNum;
+          }
+          break;
+      }
+      console.log(type, cart.skuId, disSkuNum)
+      try {
+        //一定要加await，不然响应不及时！！
+        await this.$store.dispatch("addOrUpdateShopCart", { skuId: cart.skuId, skuNum: disSkuNum });
+        //在此获取服务器最新的数据进行展示
+        this.getData();
+      } catch (error) {
+        console.log(error.message);
+      }
+    }
   },
   computed: {
     ...mapGetters(['cartList']),
@@ -82,7 +110,7 @@ export default {
       return this.cartList.cartInfoList || [];
     },
     totalPrice() {
-      return this.cartInfoList.filter(item => item.isChecked==1).reduce((sum, item) => sum += item.skuNum * item.skuPrice, 0);
+      return this.cartInfoList.filter(item => item.isChecked == 1).reduce((sum, item) => sum += item.skuNum * item.skuPrice, 0);
     },
     isAllChecked() {
       return this.cartInfoList.every(item => item.isChecked == 1);
