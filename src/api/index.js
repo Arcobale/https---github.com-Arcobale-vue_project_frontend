@@ -28,3 +28,9 @@ export const reqDeleteCart = (skuId) => requests({url: `/cart/deleteCart/${skuId
 
 //切换购物车产品选中状态
 export const reqUpdateCheckedById = (skuId, isChecked) => requests({url: `/cart/checkCart/${skuId}/${isChecked}`, method: 'get'});
+
+//获取注册验证码
+export const reqGetCode = (phone) => requests({url:`/user/passport/sendCode/${phone}`, method: 'get'});
+
+//注册用户
+export const reqRegister = (data) => requests({url: `/user/passport/register`, method:'post', data});
