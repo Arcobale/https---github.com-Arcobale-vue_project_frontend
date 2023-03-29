@@ -5,10 +5,14 @@
             <div class="container">
                 <div class="loginList">
                     <p>尚品汇欢迎您！</p>
-                    <p>
+                    <p v-if="!userName">
                         <span>请</span>
                         <router-link to="/login">登录</router-link>
                         <router-link to="/register" class="register">免费注册</router-link>
+                    </p>
+                    <p v-else>
+                        <span>{{ userName }}</span>
+                        <a>退出登录</a>
                     </p>
                 </div>
                 <div class="typeList">
@@ -68,6 +72,11 @@ export default {
         this.$bus.$on("clear", () => {
             this.keyword = "";
         })
+    },
+    computed: {
+        userName() {
+            return this.$store.state.user.userInfo.name;
+        }
     }
 }
 </script>

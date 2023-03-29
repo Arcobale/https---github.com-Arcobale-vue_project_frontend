@@ -1,8 +1,9 @@
-import { reqGetCode, reqRegister, reqLogin } from "@/api";
+import { reqGetCode, reqRegister, reqLogin, reqGetUserInfo } from "@/api";
 
 const state = {
     code: '',
     token: '',//vuex的数据不是持久化
+    userInfo: {},
 };
 const mutations = {
     GETCODE(state, code) {
@@ -10,6 +11,9 @@ const mutations = {
     },
     USERLOGIN(state, token) {
         state.token = token;
+    },
+    USERINFO(state, userInfo) {
+        state.userInfo = userInfo;
     }
 };
 const actions = {
@@ -33,9 +37,17 @@ const actions = {
     async userLogin({commit}, user) {
         let result = await reqLogin(user);
         //服务器下发token，用户的唯一标识
-        console.log(result);
         if (result.code == 200) {
             commit("USERLOGIN", result.data.token);
+            return 'ok';
+        } else {
+            return Promise.reject(new Error(result.message));
+        }
+    },
+    async getUserInfo({commit}) {
+        let result = await reqGetUserInfo();
+        if (result.code == 200) {
+            commit("USERINFO", result.data);
             return 'ok';
         } else {
             return Promise.reject(new Error(result.message));
