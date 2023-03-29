@@ -67,6 +67,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import throttle from 'lodash/throttle';
 export default {
   name: 'ShopCart',
   mounted() {
@@ -76,7 +77,7 @@ export default {
     getData() {
       this.$store.dispatch("getCartList");
     },
-    async updateSkuNum(type, newSkuNum, cart) {
+    updateSkuNum: throttle(async function (type, newSkuNum, cart) {
       let disSkuNum = 0;
       switch (type) {
         case 'minus':
@@ -101,12 +102,12 @@ export default {
       } catch (error) {
         console.log(error.message);
       }
-    },
+    }, 500),
     async deleteCartById(cart) {
       try {
         await this.$store.dispatch("deleteCartById", cart.skuId);
         this.getData();
-      } catch(error) {
+      } catch (error) {
         console.log(error.message);
       }
     }
