@@ -13,7 +13,8 @@
       <div class="cart-body">
         <ul class="cart-list" v-for="(cart, index) in cartInfoList" :key="cart.id">
           <li class="cart-list-con1">
-            <input type="checkbox" name="chk_list" :checked="cart.isChecked == 1" @change="updateCheckedById(cart, $event)">
+            <input type="checkbox" name="chk_list" :checked="cart.isChecked == 1"
+              @change="updateCheckedById(cart, $event)">
           </li>
           <li class="cart-list-con2">
             <img :src="cart.imgUrl">
@@ -41,7 +42,8 @@
     </div>
     <div class="cart-tool">
       <div class="select-all">
-        <input class="chooseAll" type="checkbox" :checked="isAllChecked">
+        <input class="chooseAll" type="checkbox" :checked="isAllChecked && cartInfoList.length > 0"
+          @change="updateAllCheckedCart">
         <span>全选</span>
       </div>
       <div class="option">
@@ -114,9 +116,9 @@ export default {
     async updateCheckedById(cart, $event) {
       try {
         let checked = $event.target.checked ? "1" : "0";
-        await this.$store.dispatch("updateCheckedById", {skuId: cart.skuId, isChecked: checked});
+        await this.$store.dispatch("updateCheckedById", { skuId: cart.skuId, isChecked: checked });
         this.getData();
-      } catch(error) {
+      } catch (error) {
         console.log(error.message);
       }
     },
@@ -124,7 +126,16 @@ export default {
       try {
         await this.$store.dispatch("deleteAllCheckedCart");
         this.getData();
-      } catch(error) {
+      } catch (error) {
+        console.log(error.message);
+      }
+    },
+    async updateAllCheckedCart(event) {
+      try {
+        let checked = event.target.checked ? "1" : "0";
+        await this.$store.dispatch("updateAllCheckedCart", checked);
+        this.getData();
+      } catch (error) {
         console.log(error.message);
       }
     }
@@ -139,7 +150,7 @@ export default {
     },
     isAllChecked() {
       return this.cartInfoList.every(item => item.isChecked == 1);
-    }
+    },
   }
 }
 </script>

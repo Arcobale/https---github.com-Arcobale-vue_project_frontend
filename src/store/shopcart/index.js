@@ -1,4 +1,4 @@
-import {reqCartList, reqDeleteCart, reqUpdateCheckedById} from '@/api';
+import { reqCartList, reqDeleteCart, reqUpdateCheckedById } from '@/api';
 const state = {
     cartList: [],
 };
@@ -8,13 +8,13 @@ const mutations = {
     }
 };
 const actions = {
-    async getCartList({commit}) {
+    async getCartList({ commit }) {
         let result = await reqCartList();
         if (result.code == 200) {
             commit("CARTLIST", result.data);
         }
     },
-    async deleteCartById({commit}, skuId) {
+    async deleteCartById({ commit }, skuId) {
         let result = await reqDeleteCart(skuId);
         if (result.code == 200) {
             return "ok";
@@ -22,7 +22,7 @@ const actions = {
             return Promise.reject(new Error("Failed"));
         }
     },
-    async updateCheckedById({commit}, {skuId, isChecked}) {
+    async updateCheckedById({ commit }, { skuId, isChecked }) {
         let result = await reqUpdateCheckedById(skuId, isChecked);
         if (result.code == 200) {
             return "ok";
@@ -30,7 +30,7 @@ const actions = {
             return Promise.reject(new Error("Failed"));
         }
     },
-    deleteAllCheckedCart({dispatch, getters}) {
+    deleteAllCheckedCart({ dispatch, getters }) {
         //context:小仓库，里面有commit getters dispatch state
         let PromiseAll = [];
         getters.cartList.cartInfoList.forEach(cart => {
@@ -40,6 +40,13 @@ const actions = {
             }
         });
         //全部的promise成功，结果才为成功
+        return Promise.all(PromiseAll);
+    },
+    updateAllCheckedCart({ dispatch, getters }, isChecked) {
+        let PromiseAll = [];
+        getters.cartList.cartInfoList.forEach(cart => {
+            PromiseAll.push(dispatch("updateCheckedById", { skuId: cart.skuId, isChecked }));
+        })
         return Promise.all(PromiseAll);
     }
 };
