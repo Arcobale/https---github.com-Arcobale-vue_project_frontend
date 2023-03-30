@@ -23,7 +23,7 @@
                     <thead>
                         <tr>
                             <th colspan="5">
-                                <span class="ordertitle">{{ record.createTime }}　订单编号：{{ record.outTradeNo}} <span
+                                <span class="ordertitle">{{ record.createTime }}　订单编号：{{ record.outTradeNo }} <span
                                         class="pull-right delete"><img src="../images/delete.png"></span></span>
                             </th>
                         </tr>
@@ -38,18 +38,19 @@
                                     <a href="#" class="service">售后申请</a>
                                 </div>
                             </td>
-                            <td :rowspan="record.orderDetailList.length" v-if="index==0" width="8%" class="center">{{ record.consignee }}</td>
-                            <td :rowspan="record.orderDetailList.length" v-if="index==0" width="13%" class="center">
+                            <td :rowspan="record.orderDetailList.length" v-if="index == 0" width="8%" class="center">{{
+                                record.consignee }}</td>
+                            <td :rowspan="record.orderDetailList.length" v-if="index == 0" width="13%" class="center">
                                 <ul class="unstyled">
                                     <li>总金额¥{{ record.totalAmount }}.00</li>
                                     <li>在线支付</li>
 
                                 </ul>
                             </td>
-                            <td :rowspan="record.orderDetailList.length" v-if="index==0" width="8%" class="center">
+                            <td :rowspan="record.orderDetailList.length" v-if="index == 0" width="8%" class="center">
                                 <a href="#" class="btn">{{ record.orderStatusName }}</a>
                             </td>
-                            <td :rowspan="record.orderDetailList.length" v-if="index==0" width="13%" class="center">
+                            <td :rowspan="record.orderDetailList.length" v-if="index == 0" width="13%" class="center">
                                 <ul class="unstyled">
                                     <li>
                                         <a href="mycomment.html" target="_blank">评价|晒单</a>
@@ -61,34 +62,9 @@
                     </tbody>
                 </table>
             </div>
-            <div class="choose-order">
-                <div class="pagination">
-                    <ul>
-                        <li class="prev disabled">
-                            <a href="javascript:">«上一页</a>
-                        </li>
-                        <li class="page actived">
-                            <a href="javascript:">1</a>
-                        </li>
-                        <li class="page">
-                            <a href="javascript:">2</a>
-                        </li>
-                        <li class="page">
-                            <a href="javascript:">3</a>
-                        </li>
-                        <li class="page">
-                            <a href="javascript:">4</a>
-                        </li>
-
-                        <li class="next disabled">
-                            <a href="javascript:">下一页»</a>
-                        </li>
-                    </ul>
-                    <div>
-                        <span>&nbsp;&nbsp;&nbsp;&nbsp;共2页&nbsp;</span>
-                    </div>
-                </div>
-            </div>
+            <!-- 分页器 -->
+            <Pagination :pageNo="page" :pageSize="limit" :total="myOrder.total" :continues="5"
+                @pageInfo="pageInfo"></Pagination>
         </div>
         <!--猜你喜欢-->
         <div class="like">
@@ -171,11 +147,15 @@ export default {
     },
     methods: {
         async getData() {
-            const {page, limit} = this;
+            const { page, limit } = this;
             let result = await this.$API.reqMyOrderList(page, limit);
             if (result.code == 200) {
                 this.myOrder = result.data;
             }
+        },
+        pageInfo(page) {
+            this.page = page;
+            this.getData();
         }
     }
 }
