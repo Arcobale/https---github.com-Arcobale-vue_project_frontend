@@ -21,12 +21,24 @@ Vue.config.productionTip = false
 //统一接收api文件夹里面全部请求函数
 import * as API from '@/api';
 
+// //全局引入
+// import ElementUI from 'element-ui';
+// import 'element-ui/lib/theme-chalk/index.css'
+// Vue.use(ElementUI);
+//全局引入
+// import { Button } from 'element-ui';
+// Vue.use(Button);
+//在原型上引入
+import { MessageBox } from 'element-ui';
+
 new Vue({
   render: h => h(App),
   //全局事件总线配置
   beforeCreate() {
     Vue.prototype.$bus = this;
     Vue.prototype.$API = API;//统一引入
+    Vue.prototype.$msgbox = MessageBox; //引入消息弹框
+    Vue.prototype.$alert = MessageBox.alert;
   },
   //注册路由：组件实例的身上会拥有$route,$router属性
   router,
