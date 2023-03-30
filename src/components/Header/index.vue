@@ -81,7 +81,7 @@ export default {
         //携带token获取用户信息
         //必须要加，不然从home跳转到其他路由组件后再刷新，不会dispatch获取用户信息。
         //如果只在Header添加dispatch的话，在第一次进入登录后不会获取到用户信息，因为Header组件已经挂载完毕了，所以需要Header和Home组件中都添加dispatch
-        this.$store.dispatch("getUserInfo");
+        // this.$store.dispatch("getUserInfo");
     },
     computed: {
         userName() {

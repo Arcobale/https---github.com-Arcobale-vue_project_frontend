@@ -30,7 +30,7 @@ export default {
   mounted() {
     this.$store.dispatch("getFloorList");
     //携带token获取用户信息
-    this.$store.dispatch("getUserInfo");
+    // this.$store.dispatch("getUserInfo");
   },
   computed: {
     ...mapState({
