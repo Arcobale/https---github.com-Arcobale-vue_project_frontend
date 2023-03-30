@@ -14,19 +14,22 @@ import Center from '@/pages/Center'
 import MyOrder from '@/pages/Center/myOrder'
 import GroupOrder from '@/pages/Center/groupOrder'
 
+//当打包构建应用时，JavaScript包会变得非常大，影响页面加载
+//如果我们能把不同路由对应的组件分割成不同的代码块，然后当路由被访问的时候才加载对应组件，这样就更加高效了
+
 export default [
     {
         path: "/center",
-        component: Center,
+        component: () => import('@/pages/Center'),
         meta: { show: true },
         children: [
             {
                 path: "myorder",
-                component: MyOrder,
+                component: () => import('@/pages/Center/myOrder'),
             },
             {
                 path: "grouporder",
-                component: GroupOrder,
+                component: () => import('@/pages/Center/groupOrder'),
             },
             {
                 path: "/center",
@@ -36,7 +39,7 @@ export default [
     },
     {
         path: "/paysuccess",
-        component: PaySuccess,
+        component: () => import('@/pages/PaySuccess'),
         meta: { show: true },
         // beforeEnter: (to, from, next) => {
         //     if (from.path == '/pay') {
@@ -48,7 +51,7 @@ export default [
     },
     {
         path: "/pay",
-        component: Pay,
+        component: () => import('@/pages/Pay'),
         meta: { show: true },
         beforeEnter: (to, from, next) => {
             if (from.path == '/trade') {
@@ -60,7 +63,7 @@ export default [
     },
     {
         path: "/trade",
-        component: Trade,
+        component: () => import('@/pages/Trade'),
         meta: { show: true },
         //路由独享守卫，trade只能从shopcart跳转过来
         beforeEnter: (to, from, next) => {
@@ -74,39 +77,40 @@ export default [
     },
     {
         path: "/shopcart",
-        component: ShopCart,
+        component: () => import('@/pages/ShopCart'),
         meta: { show: true },
     },
     {
         path: "/addcartsuccess",
-        component: AddCartSuccess,
+        component: () => import('@/pages/AddCartSuccess'),
         meta: { show: true },
         name: "addcartsuccess"
     },
     {
         path: "/detail/:skuid",
-        component: Detail,
+        component: () => import('@/pages/Detail'),
         meta: { show: true }
     },
     {
         path: "/home",
-        component: Home,
+        //路由懒加载，以后都用这种方式
+        component: () => import('@/pages/Home'),
         meta: { show: true }
     },
     {
         path: "/search/:keyword?",
-        component: Search,
+        component: () => import('@/pages/Search'),
         meta: { show: true },
         name: "search"
     },
     {
         path: "/login",
-        component: Login,
+        component: () => import('@/pages/Login'),
         meta: { show: false }
     },
     {
         path: "/register",
-        component: Register,
+        component: () => import('@/pages/Register'),
         meta: { show: false }
     },
     //重定向，在项目跑起来的时候，访问/立马定向到首页
