@@ -1,5 +1,5 @@
-import { reqGetCode, reqRegister, reqLogin, reqGetUserInfo } from "@/api";
-import { setToken, getToken } from '@/utils/token'
+import { reqGetCode, reqRegister, reqLogin, reqGetUserInfo, reqLogout } from "@/api";
+import { setToken, getToken, removeToken } from '@/utils/token'
 
 const state = {
     code: '',
@@ -15,6 +15,13 @@ const mutations = {
     },
     USERINFO(state, userInfo) {
         state.userInfo = userInfo;
+    },
+    LOGOUT(state) {
+        //本地存储数据清空
+        removeToken();
+        //将仓库中无关用户信息清空
+        state.token = '';
+        state.userInfo = {};
     }
 };
 const actions = {
@@ -54,6 +61,15 @@ const actions = {
             return 'ok';
         } else {
             return Promise.reject(new Error(result.message));
+        }
+    },
+    async logout({commit}) {
+        let result = await reqLogout();
+        if (result.code == 200) {
+            commit("LOGOUT");
+            return 'ok';
+        } else {
+            return Promise.reject(new Error("Failed"));
         }
     }
 };
