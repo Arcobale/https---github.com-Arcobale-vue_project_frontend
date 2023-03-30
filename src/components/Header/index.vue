@@ -12,7 +12,7 @@
                     </p>
                     <p v-else>
                         <span>{{ userName }}</span>
-                        <a>退出登录</a>
+                        <a class="register">退出登录</a>
                     </p>
                 </div>
                 <div class="typeList">
@@ -36,10 +36,7 @@
             </h1>
             <div class="searchArea">
                 <form action="###" class="searchForm">
-                    <input type="text" 
-                    id="autocomplete" 
-                    class="input-error input-xxlarge"
-                    v-model="keyword" />
+                    <input type="text" id="autocomplete" class="input-error input-xxlarge" v-model="keyword" />
                     <button class="sui-btn btn-xlarge btn-danger" type="button" @click="goSearch">搜索</button>
                 </form>
             </div>
@@ -62,7 +59,7 @@ export default {
             //模版字符串
             // this.$router.push(`/search/${this.keyword}?k=${this.keyword.toUpperCase()}`)
             //对象
-            let location = {name:"search", params:{keyword:this.keyword || undefined}};
+            let location = { name: "search", params: { keyword: this.keyword || undefined } };
             location.query = this.$route.query;
             this.$router.push(location);
         }
@@ -71,13 +68,17 @@ export default {
         //通过全局事件总线清除关键字
         this.$bus.$on("clear", () => {
             this.keyword = "";
-        })
+        });
+        //携带token获取用户信息
+        //必须要加，不然从home跳转到其他路由组件后再刷新，不会dispatch获取用户信息。
+        //如果只在Header添加dispatch的话，在第一次进入登录后不会获取到用户信息，因为Header组件已经挂载完毕了，所以需要Header和Home组件中都添加dispatch
+        this.$store.dispatch("getUserInfo");
     },
     computed: {
         userName() {
             return this.$store.state.user.userInfo.name;
         }
-    }
+    },
 }
 </script>
 
