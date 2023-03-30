@@ -31,6 +31,16 @@ import * as API from '@/api';
 //在原型上引入
 import { MessageBox } from 'element-ui';
 
+//引入图片懒加载插件
+import VueLazyload from 'vue-lazyload'
+//图片、JSON默认对外暴露
+import loadImg from '@/assets/loading.gif'
+//注册插件
+Vue.use(VueLazyload, {
+  //懒加载默认的图片
+  loading: loadImg,
+});
+
 new Vue({
   render: h => h(App),
   //全局事件总线配置
