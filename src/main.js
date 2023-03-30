@@ -16,13 +16,17 @@ Vue.component(Pagination.name, Pagination);
 import '@/mock/mockServe';
 //引入swiper样式
 import 'swiper/css/swiper.css';
-
 Vue.config.productionTip = false
+
+//统一接收api文件夹里面全部请求函数
+import * as API from '@/api';
+
 new Vue({
   render: h => h(App),
   //全局事件总线配置
   beforeCreate() {
     Vue.prototype.$bus = this;
+    Vue.prototype.$API = API;//统一引入
   },
   //注册路由：组件实例的身上会拥有$route,$router属性
   router,

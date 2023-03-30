@@ -82,7 +82,7 @@
       </div>
     </div>
     <div class="sub clearFix">
-      <router-link class="subBtn" to="/pay">提交订单</router-link>
+      <a class="subBtn" @click="submitOrder">提交订单</a>
     </div>
   </div>
 </template>
@@ -94,6 +94,7 @@ export default {
   data() {
     return {
       message: '',
+      orderId: '',
     }
   },
   mounted() {
@@ -115,7 +116,26 @@ export default {
       //排他思想
       address.forEach(item => item.isDefault = 0);
       addr.isDefault = 1;
-    }
+    },
+    async submitOrder() {
+      let { tradeNo } = this.orderInfo;
+      let data = {
+        consigee: this.userDefaultAddress.consigee,
+        consigeeTel: this.userDefaultAddress.phoneNum,
+        deliveryAddress: this.userDefaultAddress.fullAddress,
+        paymentWay: "ONLINE",
+        orderComment: this.message,
+        orderDetailList: this.orderInfo.detailArrayList,
+      };
+      let result = await this.$API.reqSubmitOrder(tradeNo, data);
+      if (result.code == 200) {
+        this.orderId = result.data;
+        //路由跳转+传递参数
+        this.$router.push(`/pay/?orderId=${orderId}`);
+      } else {
+        alert(result.message);
+      }
+    },
   }
 }
 </script>

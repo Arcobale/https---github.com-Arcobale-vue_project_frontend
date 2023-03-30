@@ -10,7 +10,7 @@ const mutations = {
     },
     ORDERINFO(state, orderInfo) {
         state.orderInfo = orderInfo;
-    }
+    },
 };
 const actions = {
     async getAddressInfo({commit}) {
