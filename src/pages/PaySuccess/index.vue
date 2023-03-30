@@ -20,6 +20,27 @@
 <script>
   export default {
     name: 'PaySuccess',
+    //组件内守卫
+    beforeRouteEnter(to, from, next) {
+      //在渲染该组件的对应路由被confirm前调用
+      //不能获取组件实例this
+      //因为当守卫执行前，组件实例还没被创建
+      if (from.path == "/pay") {
+        next();
+      } else {
+        next(false);
+      }
+    },
+    // beforeRouteUpdate(to, from, next) {
+    //   //在当前路由改变，但是该组件被复用时调用
+    //   //eg.对于一个带有动态参数的路径 /foo/:id，在 /foo/1和/foo/2之间跳转的时候
+    //   //由于会渲染同样的Foo组件，因此组件实例会被复用。而这个钩子就会在这个情况下被调用
+    //   //可以访问组件实例this
+    // }
+    // beforeRouteLeave(to, from, next) {
+    //   //导航离开该组件的对应路由时调用
+    //   //可以访问组件实例this
+    // }
   }
 </script>
 

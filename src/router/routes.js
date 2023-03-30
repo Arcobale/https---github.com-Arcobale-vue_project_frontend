@@ -38,13 +38,13 @@ export default [
         path: "/paysuccess",
         component: PaySuccess,
         meta: { show: true },
-        beforeEnter: (to, from, next) => {
-            if (from.path == '/pay') {
-                next();
-            } else {
-                next(false);
-            }
-        }
+        // beforeEnter: (to, from, next) => {
+        //     if (from.path == '/pay') {
+        //         next();
+        //     } else {
+        //         next(false);
+        //     }
+        // }
     },
     {
         path: "/pay",
