@@ -131,7 +131,7 @@ export default {
       if (result.code == 200) {
         this.orderId = result.data;
         //路由跳转+传递参数
-        this.$router.push(`/pay/?orderId=${orderId}`);
+        this.$router.push(`/pay/?orderId=${this.orderId}`);
       } else {
         alert(result.message);
       }

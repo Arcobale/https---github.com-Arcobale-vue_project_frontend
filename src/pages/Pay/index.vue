@@ -82,198 +82,244 @@
 </template>
 
 <script>
-  export default {
-    name: 'Pay',
-    data() {
-      return {
-        payInfo: {},
-      }
-    },
-    mounted() {
-      //不要在生命周期函数中使用async
-      this.getPayInfo();
-    },
-    computed: {
-      orderId() {
-        return this.$route.query.orderId;
-      }
-    },
-    methods: {
-      async getPayInfo() {
-        let result = await this.$API.reqPayInfo(this.orderId);
-        if (result.code == 200) {
-          this.payInfo = result.data;
-        }
-      },
-      //弹出框
-      open() {
-        this.$alert('<strong>这是 <i>HTML</i> 片段</strong>', 'HTML 片段', {
-          //message 会被当作 HTML 片段处理
-          dangerouslyUseHTMLString: true,
-          //居中展示
-          center: true,
-          //是否显示取消按钮
-          showCancelButton:true,
-          //取消按钮的文本内容
-          cancelButtonText: "支付遇见问题",
-          //确定按钮的文本内容
-          confirmButtonText: "已支付成功",
-          //是否显示右上角关闭按钮
-          showClose: false,
-        });
-      },
+import QRCode from 'qrcode';
+export default {
+  name: 'Pay',
+  data() {
+    return {
+      payInfo: {},
+      time: null,
+      code: '',
     }
+  },
+  mounted() {
+    //不要在生命周期函数中使用async
+    this.getPayInfo();
+  },
+  computed: {
+    orderId() {
+      return this.$route.query.orderId;
+    }
+  },
+  methods: {
+    async getPayInfo() {
+      let result = await this.$API.reqPayInfo(this.orderId);
+      if (result.code == 200) {
+        this.payInfo = result.data;
+      }
+    },
+    //弹出框
+    async open() {
+      //把字符串转换成二维码
+      let url = await QRCode.toDataURL(this.payInfo.codeUrl);
+      this.$alert(`<img src=${url} />`, '扫描二维码支付', {
+        //message 会被当作 HTML 片段处理
+        dangerouslyUseHTMLString: true,
+        //居中展示
+        center: true,
+        //是否显示取消按钮
+        showCancelButton: true,
+        //取消按钮的文本内容
+        cancelButtonText: "支付遇见问题",
+        //确定按钮的文本内容
+        confirmButtonText: "已支付成功",
+        //是否显示右上角关闭按钮
+        showClose: false,
+        //MessageBox 关闭前的回调，会暂停实例的关闭
+        beforeClose: (type, instance, done) => {
+          //type:区分取消和确定的按钮
+          //instance:当前组件实例
+          //done:关闭弹出框的方法
+          if (type == 'cancel') {
+            alert("请联系管理员");
+            //清除定时器
+            clearInterval(this.timer);
+            this.timer = null;
+            //关闭弹出框
+            done();
+          } else {
+            //判断是否支付
+            //开发时为了自己方便，这里先不判断
+            // if (this.code == 200) {
+              clearInterval(this.timer);
+              this.timer = null;
+              done();
+              this.$router.push('/paysuccess');
+            // }
+          }
+        },
+      });
+      //需要知道支付成功或失败
+      //成功，路由跳转，失败，提示信息
+      if (!this.timer) {
+        this.timer = setInterval(async () => {
+          let result = await this.$API.reqPayStatus(this.orderId);
+          if (result.code == 200) {
+            //清除定时器
+            clearInterval(this.timer);
+            this.timer = null;
+            //保存支付成功的code
+            this.code = result.code;
+            //关闭弹出框
+            this.$msgbox.close();
+            //路由跳转
+            this.$router.push('/paysuccess');
+          }
+        }, 1000);
+      }
+    },
   }
+}
 </script>
 
 <style lang="less" scoped>
-  .pay-main {
-    margin-bottom: 20px;
+.pay-main {
+  margin-bottom: 20px;
 
-    .pay-container {
-      margin: 0 auto;
-      width: 1200px;
+  .pay-container {
+    margin: 0 auto;
+    width: 1200px;
 
-      a:hover {
-        color: #4cb9fc;
-      }
+    a:hover {
+      color: #4cb9fc;
+    }
 
-      .orange {
-        color: #e1251b;
-      }
+    .orange {
+      color: #e1251b;
+    }
 
-      .money {
-        font-size: 18px;
-      }
+    .money {
+      font-size: 18px;
+    }
 
-      .zfb {
-        color: #e1251b;
-        font-weight: 700;
-      }
+    .zfb {
+      color: #e1251b;
+      font-weight: 700;
+    }
 
-      .checkout-tit {
-        padding: 10px;
+    .checkout-tit {
+      padding: 10px;
 
-        .tit-txt {
-          font-size: 14px;
-          line-height: 21px;
+      .tit-txt {
+        font-size: 14px;
+        line-height: 21px;
 
-          .success-icon {
-            width: 30px;
-            height: 30px;
-            display: inline-block;
-            background: url(./images/icon.png) no-repeat 0 0;
-          }
-
-          .success-info {
-            padding: 0 8px;
-            line-height: 30px;
-            vertical-align: top;
-          }
-        }
-
-        .paymark {
-          overflow: hidden;
-          line-height: 26px;
-          text-indent: 38px;
-
-          .fl {
-            float: left;
-          }
-
-          .fr {
-            float: right;
-
-            .lead {
-              margin-bottom: 18px;
-              font-size: 15px;
-              font-weight: 400;
-              line-height: 22.5px;
-            }
-          }
-        }
-      }
-
-      .checkout-info {
-        padding-left: 25px;
-        padding-bottom: 15px;
-        margin-bottom: 10px;
-        border: 2px solid #e1251b;
-
-        h4 {
-          margin: 9px 0;
-          font-size: 14px;
-          line-height: 21px;
-          color: #e1251b;
-        }
-
-        ol {
-          padding-left: 25px;
-          list-style-type: decimal;
-          line-height: 24px;
-          font-size: 14px;
-        }
-
-        ul {
-          padding-left: 25px;
-          list-style-type: disc;
-          line-height: 24px;
-          font-size: 14px;
-        }
-      }
-
-      .checkout-steps {
-        border: 1px solid #ddd;
-        padding: 25px;
-
-        .hr {
-          height: 1px;
-          background-color: #ddd;
-        }
-
-        .step-tit {
-          line-height: 36px;
-          margin: 15px 0;
-        }
-
-        .step-cont {
-          margin: 0 10px 12px 20px;
-
-          ul {
-            font-size: 0;
-
-            li {
-              margin: 2px;
-              display: inline-block;
-              padding: 5px 20px;
-              border: 1px solid #ddd;
-              cursor: pointer;
-              line-height: 18px;
-            }
-          }
-        }
-      }
-
-      .submit {
-        text-align: center;
-
-        .btn {
+        .success-icon {
+          width: 30px;
+          height: 30px;
           display: inline-block;
-          padding: 15px 45px;
-          margin: 15px 0 10px;
-          font: 18px "微软雅黑";
-          font-weight: 700;
-          border-radius: 0;
-          background-color: #e1251b;
-          border: 1px solid #e1251b;
-          color: #fff;
-          text-align: center;
-          vertical-align: middle;
-          cursor: pointer;
-          user-select: none;
-          text-decoration: none;
+          background: url(./images/icon.png) no-repeat 0 0;
+        }
+
+        .success-info {
+          padding: 0 8px;
+          line-height: 30px;
+          vertical-align: top;
+        }
+      }
+
+      .paymark {
+        overflow: hidden;
+        line-height: 26px;
+        text-indent: 38px;
+
+        .fl {
+          float: left;
+        }
+
+        .fr {
+          float: right;
+
+          .lead {
+            margin-bottom: 18px;
+            font-size: 15px;
+            font-weight: 400;
+            line-height: 22.5px;
+          }
         }
       }
     }
+
+    .checkout-info {
+      padding-left: 25px;
+      padding-bottom: 15px;
+      margin-bottom: 10px;
+      border: 2px solid #e1251b;
+
+      h4 {
+        margin: 9px 0;
+        font-size: 14px;
+        line-height: 21px;
+        color: #e1251b;
+      }
+
+      ol {
+        padding-left: 25px;
+        list-style-type: decimal;
+        line-height: 24px;
+        font-size: 14px;
+      }
+
+      ul {
+        padding-left: 25px;
+        list-style-type: disc;
+        line-height: 24px;
+        font-size: 14px;
+      }
+    }
+
+    .checkout-steps {
+      border: 1px solid #ddd;
+      padding: 25px;
+
+      .hr {
+        height: 1px;
+        background-color: #ddd;
+      }
+
+      .step-tit {
+        line-height: 36px;
+        margin: 15px 0;
+      }
+
+      .step-cont {
+        margin: 0 10px 12px 20px;
+
+        ul {
+          font-size: 0;
+
+          li {
+            margin: 2px;
+            display: inline-block;
+            padding: 5px 20px;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            line-height: 18px;
+          }
+        }
+      }
+    }
+
+    .submit {
+      text-align: center;
+
+      .btn {
+        display: inline-block;
+        padding: 15px 45px;
+        margin: 15px 0 10px;
+        font: 18px "微软雅黑";
+        font-weight: 700;
+        border-radius: 0;
+        background-color: #e1251b;
+        border: 1px solid #e1251b;
+        color: #fff;
+        text-align: center;
+        vertical-align: middle;
+        cursor: pointer;
+        user-select: none;
+        text-decoration: none;
+      }
+    }
   }
+}
 </style>
