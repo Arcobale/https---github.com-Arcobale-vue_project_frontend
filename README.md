@@ -1,4 +1,4 @@
-# manager_system_app
+# e-commerce website
 
 ## Project setup
 ```
